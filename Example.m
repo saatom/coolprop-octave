@@ -5,4 +5,5 @@ function Example()
   clf(); hold on; arrayfun(@(pidx) plot(T, rho(:, pidx)), [1:length(P)]); hold off; # Plot the values
   xlabel('Temperature (K)'); ylabel('Density (kg/m^3)'); title('Density of Air vs Temperature at Various Pressures'); axis tight; # Assign axis labels
   legend(cellfun(@(p) sprintf('%.1f MPa',p/10^6), num2cell(P), 'UniformOutput', false)); # Set legend
+  [rho mu k] = CoolProp.PropsSI({'D', 'VISCOSITY', 'CONDUCTIVITY'}, 'T', T, 'P', P, 'Air') # Generate a 30x10 matrix of densities, with temperatures on the rows and pressures on the columns
 endfunction
