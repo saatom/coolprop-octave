@@ -1,15 +1,11 @@
 # coolprop-octave
+Created by Wyatt Richards <wr1701@proton.me>
+# DESCRIPTION
+Octave script to interface with Python wrapper of CoolProp. The official Octave wrapper wasn't working right so I whipped this cursed thing together to help me get some work done. I encourage you to make any improvements you can come up with. I am in no way affiliated with the creators or maintainers of CoolProp, this is merely a side project.
 
-***DESCRIPTION***
-Octave script to interface with Python wrapper of CoolProp
-Made by Wyatt Richards
+Calling ```CoolProp``` will return a struct containing functions that mirror the high-level function names in the official Python library. The primary advantage of this script is that it allows not only multiple outputs at a time, but it also supports matrix inputs as well for functions like ```CoolProp.PropsSI``` (see example code). This script relies on Octave's 'pythonic' package and loads the relevant Python modules on the first ```CoolProp``` function call. It's reasonably fast for small matrices but you'll want to implement some sort of multithreading if you want to use large data sets (I'd like to implement this natively if I get around to it, but it currently runs on a single thread). I'm sure there are ways to optimize how Octave interfaces with Python but it's good enough for now.
 
-The official Octave wrapper wasn't working right so I whipped this cursed thing together to help me get some work done. I encourage you to make any improvements you can come up with. I am in no way affiliated with the creators or maintainers of CoolProp, this is merely a side project.
-
-***OVERVIEW***
-Calling ```CoolProp``` will return a struct containing functions that mirror the high-level function names in the official Python library. The primary advantage of this script is that it allows not only multiple outputs at a time, but it also supports matrix inputs as well for functions like ```CoolProp.PropsSI```.
-
-***EXAMPLE CODE***
+# EXAMPLE CODE
 ```octave
 T = linspace(-30, 80, 30) + 273; # Create a matrix of temperatures in K
 P = linspace(1e5, 10e5, 10); # Create a matrix of pressures in Pa
@@ -18,7 +14,7 @@ clf(); hold on; arrayfun(@(pidx) plot(T, rho(:, pidx)), [1:length(P)]); hold off
 xlabel('Temperature (K)'); ylabel('Density (kg/m^3)'); title('Density of Air vs Temperature at Various Pressures'); axis tight; # Assign axis labels
 legend(cellfun(@(p) sprintf('%.1f MPa',p/10^6), num2cell(P), 'UniformOutput', false)); # Set legend
 ```
-The above code produces the following figure
+The above code grabbed all 300 data points in about 700 milliseconds on my machine and plotted them (see below)
 <img width="802" height="548" alt="example_plot" src="https://github.com/user-attachments/assets/02f61e51-1848-45ff-82e0-8fc276c97f6a" />
 
 In addition to matrix inputs, you can also specify several output parameters as well like so:
@@ -37,7 +33,7 @@ Additionally, I have added some variable substitutions to make life a little eas
 'nu' = kinematic viscosity
 ```
 
-***DEPENDENCIES***
+# DEPENDENCIES
 This script requires Octave's 'parallel' and 'pythonic' packages, both of which can be installed from Octave's public package library. 
 Note: I have included parallel as a dependency because I intend to implement parallel computing capabilities for large matrix inputs but it is unused at the moment.
 
