@@ -52,10 +52,21 @@ function out=__coolprop__(fname, varargin) # Interpret coolprop instructions int
   if isempty(coolprop_python_initialized)
     pkg load pythonic
     pkg load parallel
+    loaded=pkg('list');
+    for idx=1:length(loaded)
+      p=loaded{idx};
+      if strcmpi(p.name,'symbolic') && p.loaded==true # Fix symbolic package quirks
+        disp("CoolProp: package 'symbolic' is loaded resetting Python environment to accommodate it")
+        sympref ipc popen2
+        sympref reset
+        break;
+      endif
+    endfor
     disp("initializing python environment and associated modules")
     pyexec("from CoolProp import AbstractState");
     pyexec("from CoolProp.CoolProp import PropsSI, PhaseSI, get_global_param_string");
     pyexec("from CoolProp.HumidAirProp import HAPropsSI");
+    #pyexec("import sympy")
     coolprop_python_initialized=true;
   endif
   if length(varargin)==0
